@@ -9,6 +9,7 @@
  *                          cases where POST should have been used. 
  *  # NB - 09/18/2009 - Fixed an issue in PopulateRow with parsing numbers.
  *  # NB - 2013-06-04 - Switched to POST for all web requests.
+ *  # NB - 2013-06-07 - Cleaned up constructor code, to follow DRY.
  */
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;
@@ -23,7 +24,6 @@ using System.Xml;
 
 namespace fmDotNet
 {
-    [Serializable]
     public class FMSAxml
     {
         #region "Private Variables"
@@ -53,7 +53,7 @@ namespace fmDotNet
         public Grammar XmlGrammer { get; set; }
 
         public String ServerAddress { get; set; }       // IP or DNS name
-        public String Port { get; set; }                // 80 for HTTP or 443 for HTTPS
+        public Int32 Port { get; set; }                // 80 for HTTP or 443 for HTTPS
         public Int32 ResponseTimeout { get; set; }      // used in HttpWebRequest to set the timeout
         public Boolean DTDValidation { get; set; }      // false by default because it breaks in FMSA9
 
@@ -96,10 +96,6 @@ namespace fmDotNet
             }
         }
 
-        //private string wpeBuild = "";
-        //private string wpeVersion = "";
-        //private string wpeName = "";
-        //private int totalRecords;
         #endregion
 
         #region "Public Properties"
@@ -128,7 +124,7 @@ namespace fmDotNet
         /// Read-only property: build info of the Web Publishing Engine (WPE).
         /// </summary>
         /// <value>The WPE build.</value>
-        public string WPEbuild
+        public string WPEBuild
         {
             get;
             private set;
@@ -137,7 +133,7 @@ namespace fmDotNet
         /// Read-only property: version info of the Web Publishing Engine (WPE).
         /// </summary>
         /// <value>The WPE version.</value>
-        public string WPEversion
+        public string WPEVersion
         {
             get;
             private set;
@@ -146,7 +142,7 @@ namespace fmDotNet
         /// Read-only property: name of the Web Publishing Engine (WPE).
         /// </summary>
         /// <value>The WPE name.</value>
-        public string WPEname
+        public string WPEName
         {
             get;
             private set;
@@ -167,7 +163,7 @@ namespace fmDotNet
         /// <param name="timeOut">Milliseconds to wait for FMSA's response. (Default is 100,000 or 100 seconds).</param>
         /// <param name="dtd">Use DTD validation (Default is False). DO NOT USE WITH FMSA 9!!!!</param>
         /// <remarks>In this version of fmDotNet we're only going to use fmresultset as the available grammar no matter what is specified in the class constructor parameters</remarks>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, Grammar theGrammar, string theAccount, string thePW, int timeOut, bool dtd)
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, Grammar theGrammar, string theAccount, string thePW, int timeOut, bool dtd)
         {
             Protocol = theScheme;
             ServerAddress = theServer;
@@ -193,21 +189,8 @@ namespace fmDotNet
         /// <param name="theGrammar">The XML grammar requested from FMSA.</param>
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.</param>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, Grammar theGrammar, string theAccount, string thePW)
-        {
-            Protocol = theScheme;
-            ServerAddress = theServer;
-            Port = thePort;
-            ResponseTimeout = 100000;
-            DTDValidation = false;
-
-            XmlGrammer = Grammar.fmresultset;
-
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, Grammar theGrammar, string theAccount, string thePW)
+            : this(theScheme, theServer, thePort, theGrammar, theAccount, thePW, 100000, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -220,21 +203,8 @@ namespace fmDotNet
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.</param>
         /// <param name="dtd">Use DTD validation (Default is False). DO NOT USE WITH FMSA 9!!!!</param>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, Grammar theGrammar, string theAccount, string thePW, bool dtd)
-        {
-            Protocol = theScheme;
-            ServerAddress = theServer;
-            Port = thePort;
-            ResponseTimeout = 100000;
-            DTDValidation = dtd;
-
-            XmlGrammer = Grammar.fmresultset;
-
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, Grammar theGrammar, string theAccount, string thePW, bool dtd)
+            : this(theScheme, theServer, thePort, theGrammar, theAccount, thePW, 100000, dtd) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -244,18 +214,7 @@ namespace fmDotNet
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.</param>
         public FMSAxml(String theServer, String theAccount, String thePW)
-        {
-            Protocol = Scheme.HTTP;
-            ServerAddress = theServer;
-            Port = "80";
-            ResponseTimeout = 100000; // default http web request timeout. 100 seconds
-            DTDValidation = false;
-            XmlGrammer = Grammar.fmresultset;
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+            : this(Scheme.HTTP, theServer, 80, Grammar.fmresultset, theAccount, thePW, 100000, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -266,19 +225,8 @@ namespace fmDotNet
         /// <param name="thePort">The port.</param>
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.  Can be empty ("").</param>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, string theAccount, string thePW)
-        {
-            Protocol = theScheme;
-            ServerAddress = theServer;
-            Port = thePort;
-            ResponseTimeout = 100000;
-            DTDValidation = false;
-            XmlGrammer = Grammar.fmresultset;
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, string theAccount, string thePW)
+            : this(theScheme, theServer, thePort, Grammar.fmresultset, theAccount, thePW, 100000, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -290,19 +238,8 @@ namespace fmDotNet
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.  Can be empty ("").</param>
         /// <param name="timeOut">Milliseconds to wait for FMSA's response. (Default is 100,000 or 100 seconds)</param>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, string theAccount, string thePW, int timeOut)
-        {
-            Protocol = theScheme;
-            ServerAddress = theServer;
-            Port = thePort;
-            ResponseTimeout = timeOut;
-            DTDValidation = false;
-            XmlGrammer = Grammar.fmresultset;
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, string theAccount, string thePW, int timeOut)
+            : this(theScheme, theServer, thePort, Grammar.fmresultset, theAccount, thePW, timeOut, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -314,24 +251,9 @@ namespace fmDotNet
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.  Can be empty ("").</param>
         /// <param name="dtd">Use DTD validation (Default is False). DO NOT USE WITH FMSA 9!!!!</param>
-        public FMSAxml(Scheme theScheme, string theServer, string thePort, string theAccount, string thePW, bool dtd)
-        {
-            Protocol = theScheme;
-            ServerAddress = theServer;
-            Port = thePort;
-            ResponseTimeout = 100000;
-            DTDValidation = dtd;
-            XmlGrammer = Grammar.fmresultset;
-            FMAccount = theAccount;
-            FMPassword = thePW;
-            BaseUrl = MakeURL();
-            availableDBs = GetFiles();
-        }
+        public FMSAxml(Scheme theScheme, string theServer, int thePort, string theAccount, string thePW, bool dtd)
+            : this(theScheme, theServer, thePort, Grammar.fmresultset, theAccount, thePW, 100000, dtd) { }
 
-        /// <summary>
-        /// Default parameterless constructor for serialization.
-        /// </summary>
-        public FMSAxml() { }
         #endregion
 
         #region "Public Methods"
@@ -481,13 +403,13 @@ namespace fmDotNet
                                 switch (attrib.Name)
                                 {
                                     case "version":
-                                        this.WPEversion= attrib.Value;
+                                        this.WPEVersion= attrib.Value;
                                         break;
                                     case "name":
-                                        this.WPEname = attrib.Value;
+                                        this.WPEName = attrib.Value;
                                         break;
                                     case "build":
-                                        this.WPEbuild = attrib.Value;
+                                        this.WPEBuild = attrib.Value;
                                         break;
                                 }
                             } // foreach attrib
@@ -1029,7 +951,7 @@ namespace fmDotNet
             // raise error if not
             string temp = "";
 
-            temp = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/" + XmlGrammer + ".xml?";
+            temp = Protocol + "://" + ServerAddress + ":" + Port.ToString() + "/fmi/xml/" + XmlGrammer + ".xml?";
             return temp;
 
         } // MakeURL
