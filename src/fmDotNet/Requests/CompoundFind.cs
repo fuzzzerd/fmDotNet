@@ -137,15 +137,15 @@ namespace fmDotNet.Requests
                                         Type fieldType = FMSAxml.GetSystemType(field);
                                         // add a column for it
                                         // except if it already contains a column with that name
-                                        if (!table.Columns.Contains(fmf[x].name))
+                                        if (!table.Columns.Contains(fmf[x].Name))
                                         {
-                                            table.Columns.Add(fmf[x].name, fieldType);
+                                            table.Columns.Add(fmf[x].Name, fieldType);
                                         }
                                         else
                                         {
                                             // if the column does already exist, add a dup otherwise
                                             // we risk getting in trouble with assigning data to columns
-                                            table.Columns.Add(fmf[x].name + "_dup", fieldType);
+                                            table.Columns.Add(fmf[x].Name + "_dup", fieldType);
                                         }
 
                                         x++;
@@ -174,9 +174,9 @@ namespace fmDotNet.Requests
                                         foreach (XmlNode portalField in field.ChildNodes)
                                         {
                                             fmf[x] = fms.PopulateFieldInfo(portalField);
-                                            fmf[x].portal = thePortal;
+                                            fmf[x].Portal = thePortal;
                                             fieldType = FMSAxml.GetSystemType(portalField);
-                                            subTable.Columns.Add(fmf[x].name, fieldType);
+                                            subTable.Columns.Add(fmf[x].Name, fieldType);
 
                                             x++;
                                         }

@@ -12,11 +12,12 @@
  *  # NB - 2013-06-07 - Cleaned up constructor code, to follow DRY.
  *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation, both FMS12 and FMS13 appear 
  *                      to fail DTD validation, FMS11 works as expected.
- */ 
+ */
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -27,7 +28,7 @@ namespace fmDotNet
 {
     public class FMSAxml
     {
-        #region "Private Variables"
+        #region "Private, protected, and internal variables"
 
         // Set to false for "quick" file/layout changing
         private Boolean checkFileAndLayout = true;
@@ -37,7 +38,7 @@ namespace fmDotNet
         /// Read-only array of FM fields.
         /// </summary>
         /// <value>The fields.</value>
-        public FMField[] Fields
+        internal FMField[] Fields
         {
             get
             {
@@ -48,27 +49,30 @@ namespace fmDotNet
                 fields = value;
             }
         }
+        #endregion
 
-        // private fields, set by the constructor
-        public Scheme Protocol { get; set; }
-        public Grammar XmlGrammer { get; set; }
+        #region "Public Properties"
 
-        public String ServerAddress { get; set; }       // IP or DNS name
-        public Int32 Port { get; set; }                // 80 for HTTP or 443 for HTTPS
-        public Int32 ResponseTimeout { get; set; }      // used in HttpWebRequest to set the timeout
-        public Boolean DTDValidation { get; set; }      // false by default because it breaks in FMSA9
+        // Fields, private set, public get
+        public Scheme Protocol { get; private set; }
+        public Grammar XmlGrammer { get; private set; }
 
-
+        public String ServerAddress { get; private set; }       // IP or DNS name
+        public Int32 Port { get; private set; }                 // 80 for HTTP or 443 for HTTPS
+        public Int32 ResponseTimeout { get; private set; }      // used in HttpWebRequest to set the timeout
+        public Boolean DTDValidation { get; private set; }      // false by default because it breaks in FMSA9
+        
         private List<String> availableDBs;
+        
         /// <summary>
         /// Read-only List of available files.
         /// </summary>
         /// <value></value>
-        public ICollection<String> AvailableDatabases
+        public ReadOnlyCollection<String> AvailableDatabases
         {
             get
             {
-                return availableDBs;
+                return availableDBs.AsReadOnly();
             }
         }
         private List<String> availableLayouts;
@@ -76,11 +80,11 @@ namespace fmDotNet
         /// Read-only List of available layouts of a given file.
         /// </summary>
         /// <value>The available layouts.</value>
-        public ICollection<String> AvailableLayouts
+        public ReadOnlyCollection<String> AvailableLayouts
         {
             get
             {
-                return availableLayouts;
+                return availableLayouts.AsReadOnly();
             }
         }
 
@@ -89,21 +93,20 @@ namespace fmDotNet
         /// Read-only List of scripts in the chosen file.
         /// </summary>
         /// <value>The available scripts.</value>
-        public ICollection<String> AvailableScripts
+        public ReadOnlyCollection<String> AvailableScripts
         {
             get
             {
-                return availableScripts;
+                return availableScripts.AsReadOnly();
             }
         }
-
-        #endregion
-
-        #region "Public Properties"
         /// <summary>
         /// Represents the currently selected FM file, set by the "SetDatabase" method.
         /// </summary>
         public String CurrentDatabase { get; set; }
+        /// <summary>
+        /// Represents the currently selected layout, set by SetLayout method.
+        /// </summary>
         public String CurrentLayout { get; set; }
         public String ResponseLayout { get; set; }
         public String BaseUrl { get; set; }
@@ -507,15 +510,15 @@ namespace fmDotNet
             // and it is a container
             foreach (FMField f in fields)
             {
-                if (f.name == fieldName)
+                if (f.Name == fieldName)
                 {
-                    if (f.type == "container")
+                    if (f.Type == "container")
                     {
                         temp = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/cnt/data.jpg?-db=" + CurrentDatabase + "&-lay=" + CurrentLayout + "&-recid=" + recordID + "&-field=" + fieldName;
                     }
                     else
                     {
-                        throw new FormatException("Field: " + fieldName + " is not a container but a \"" + f.type + "\"");
+                        throw new FormatException("Field: " + fieldName + " is not a container but a \"" + f.Type + "\"");
                     }
                     break;
                 }
@@ -537,9 +540,9 @@ namespace fmDotNet
             int temp = 1;
             for (int i = 0; i < fields.Length; i++)
             {
-                if (fields[i].name == fieldName)
+                if (fields[i].Name == fieldName)
                 {
-                    temp = fields[i].repCount;
+                    temp = fields[i].RepetitionCount;
                     break;
                 }
             }
@@ -789,7 +792,7 @@ namespace fmDotNet
                                         foreach (XmlNode portalField in field.ChildNodes)
                                         {
                                             FMField fr = PopulateFieldInfo(portalField);
-                                            fr.portal = thePortal;
+                                            fr.Portal = thePortal;
                                             temp.Add(fr);
                                             //temp[i] = PopulateFieldInfo(portalField);
                                             //temp[i].portal = thePortal;
@@ -823,17 +826,17 @@ namespace fmDotNet
 
             if (theNode.Attributes.GetNamedItem("global").Value == "yes")
             {
-                temp.global = "yes";
+                temp.Global = "yes";
             }
             else
             {
                 // don't want to leave it null...
-                temp.global = "";
+                temp.Global = "";
             }
-            temp.name = theNode.Attributes.GetNamedItem("name").Value;
-            temp.repCount = Convert.ToInt32(theNode.Attributes.GetNamedItem("max-repeat").Value);
-            temp.result = theNode.Attributes.GetNamedItem("result").Value;
-            temp.type = theNode.Attributes.GetNamedItem("type").Value;
+            temp.Name = theNode.Attributes.GetNamedItem("name").Value;
+            temp.RepetitionCount = Convert.ToInt32(theNode.Attributes.GetNamedItem("max-repeat").Value);
+            temp.Result = theNode.Attributes.GetNamedItem("result").Value;
+            temp.Type = theNode.Attributes.GetNamedItem("type").Value;
 
             return temp;
         }
@@ -1271,9 +1274,9 @@ namespace fmDotNet
             String currentType = "";
             for (int y = 0; y < f.Length; y++)
             {
-                if (f[y].name == theName)
+                if (f[y].Name == theName)
                 {
-                    currentType = f[y].result;
+                    currentType = f[y].Result;
                     break;
                 }
             }

@@ -17,27 +17,27 @@ namespace fmDotNet
         /// <summary>
         /// Name of the field
         /// </summary>
-        public string name;
+        public string Name;
         /// <summary>
         /// The data type of the field (text, number, container,...)
         /// </summary>
-        public string result;
+        public string Result;
         /// <summary>
         /// "true" if the field is a global
         /// </summary>
-        public string global;
+        public string Global;
         /// <summary>
         /// Field type (normal, calculated,...)
         /// </summary>
-        public string type;
+        public string Type;
         /// <summary>
         /// The number of repetitions the field has
         /// </summary>
-        public int repCount;
+        public int RepetitionCount;
         /// <summary>
         /// If the field is displayed through a portal, this will represent the name of the relationship used for the portal.
         /// </summary>
-        public string portal;
+        public string Portal;
         /* not included but available if we want to grab it
          * auto-enter
          * not-empty
