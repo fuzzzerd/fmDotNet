@@ -14,17 +14,21 @@ namespace fmDotNet.Tests
             var asr = new System.Configuration.AppSettingsReader();
 
             var fms = new FMSAxml(
-                theServer: (string)asr.GetValue("TestServerName", typeof(string)) as string,
-                theAccount: (string)asr.GetValue("TestServerUser", typeof(string)) as string,
+                theServer: (string)asr.GetValue("TestServerName", typeof(string)),
+                theAccount: (string)asr.GetValue("TestServerUser", typeof(string)),
                 thePort: (int)asr.GetValue("TestServerPort", typeof(int)),
-                thePW: (string)asr.GetValue("TestServerPass", typeof(string)) as string
+                thePW: (string)asr.GetValue("TestServerPass", typeof(string))
                 );
             return fms;
         }
 
+        #region "File/Server Independent Tests"
+        //
+        // These tests only require one hosted file with guest/anonymous access
+        //
 
         [TestMethod]
-        public void ListFiles_ShouldReturn_OneOrMore()
+        public void NewFMSAxml_Should_Populate_AvailableDatabases()
         {
             // arrange & act (in this case)
             var fms = this.SetupFMSAxml();
@@ -97,5 +101,6 @@ namespace fmDotNet.Tests
             // assert
             Assert.IsTrue(fms.AvailableScripts.Count == 0);
         }
+        #endregion
     }
 }
