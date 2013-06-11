@@ -10,8 +10,8 @@
  *  # NB - 09/18/2009 - Fixed an issue in PopulateRow with parsing numbers.
  *  # NB - 2013-06-04 - Switched to POST for all web requests.
  *  # NB - 2013-06-07 - Cleaned up constructor code, to follow DRY.
- *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation. 
- *                      Both FMS12 and FMS13 appear to fail DTD validation, FMS11 works as expected.
+ *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation, both FMS12 and FMS13 appear 
+ *                      to fail DTD validation, FMS11 works as expected.
  */ 
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;

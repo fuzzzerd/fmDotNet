@@ -193,17 +193,27 @@ namespace fmDotNet.Requests
                             {
                                 DataRow newRow = null;
 
-                                // get FileMaker internal RecordID
-                                String theRecordID = (from XmlAttribute a in rec.Attributes
-                                        where a.Name.ToLower() == "record-id"
-                                        select a.Value).Single();
-                                // set primary key to the internal FileMaker RecordID
-                                String primaryKey = theRecordID;
+                                string primaryKey = "";
 
-                                // get FileMaker internal ModificationID
-                                String theModID = (from XmlAttribute a in rec.Attributes
-                                        where a.Name.ToLower() == "mod-id"
-                                        select a.Value).Single();
+                                string theRecordID = "";
+                                string theModID = "";
+
+                                /* recordid, mod id is in the attributes */
+                                foreach (XmlAttribute attrib in rec.Attributes)
+                                {
+                                    switch (attrib.Name)
+                                    {
+                                        case "record-id":
+                                            theRecordID = attrib.Value;
+                                            primaryKey = theRecordID;
+
+                                            break;
+                                        case "mod-id":
+                                            theModID = attrib.Value;
+                                            break;
+                                    }
+
+                                } /*  for each attrib */
 
                                 /* see if this is a record for the main table
                                  * or for a related table

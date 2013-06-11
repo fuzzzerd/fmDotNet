@@ -4,11 +4,6 @@
  *  # NB - 10/28/2008 10:37:19 AM - Source File Created
  * 
  */
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace fmDotNet.Enumerations
 {
