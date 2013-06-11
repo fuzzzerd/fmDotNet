@@ -208,13 +208,24 @@ namespace fmDotNet
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
-        /// Mininal info.  Assumes HTTP on port 80 and fmresultset as the returned XML grammar.  No DTD validation and a default 100 sec response time-out.
+        /// Mininal info.  Assumes HTTP on port 80 and fmresultset as the returned XML grammar. No DTD validation and a default 100 sec response time-out.
         /// </summary>
         /// <param name="theServer">The IP or DNS name of the web server.</param>
         /// <param name="theAccount">The account.</param>
         /// <param name="thePW">The password.</param>
         public FMSAxml(String theServer, String theAccount, String thePW)
             : this(Scheme.HTTP, theServer, 80, Grammar.fmresultset, theAccount, thePW, 100000, false) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FMSAxml"/> class.
+        /// Assumes fmresultset as the returned XML grammar. Using HTTP (unless port = 443), no DTD validation, and a default 100 sec response time-out.
+        /// </summary>
+        /// <param name="theServer">The IP or DNS name of the web server.</param>
+        /// <param name="thePort">The port.</param>
+        /// <param name="theAccount">The account.</param>
+        /// <param name="thePW">The password.  Can be empty ("").</param>
+        public FMSAxml(string theServer, int thePort, string theAccount, string thePW)
+            : this(thePort != 443 ? Scheme.HTTP : Scheme.HTTPS, theServer, thePort, Grammar.fmresultset, theAccount, thePW, 100000, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMSAxml"/> class.
@@ -294,7 +305,7 @@ namespace fmDotNet
                 }
                 else
                 {
-                    // set lists so they aren't null 
+                    // set lists so they aren't empty 
                     availableLayouts = new List<String>(0);
                     availableScripts = new List<String>(0);
                 }
@@ -1151,68 +1162,68 @@ namespace fmDotNet
         /// <returns>XmlNode root of the FMSA XML</returns>
         public static XmlNode RootOfDoc(String theUrl, String theData, String account, String pw, Int32 timeout, Boolean validateDtd)
         {
-            XmlNode tempRoot;
-            HttpWebRequest rq;
+            // setup the credentials to use for making the request
             NetworkCredential nc = new NetworkCredential(account, pw);
 
+            // reminant of the original query string method in each Request type
+            // TODO: Remove question from query data in each request type since
+            // all data is sent to FileMaker Server via HTTP POST.
+            theUrl = theUrl.Replace("?", String.Empty);
 
-            // send this request as a POST because its too large for a GET
-            rq = (HttpWebRequest)WebRequest.Create(theUrl.Replace("?", String.Empty));
+            // prepare data for being sent 
+            // takes our string and makes a byte array.
+            var bytes = System.Text.Encoding.Default.GetBytes(theData);
+
+            var rq = (HttpWebRequest)WebRequest.Create(theUrl);
             rq.Credentials = nc;    // set credentials
             rq.Timeout = timeout;   // default is 100,000 milliseconds (100 seconds)
 
-            // get the data to POST
-            byte[] bytes = Encoding.ASCII.GetBytes(theData);
-
             // setup the type of http request
             rq.ContentType = "application/x-www-form-urlencoded";
+            // send all requests as HTTP POST, to ensure the data is not truncated
             rq.Method = "POST";
             rq.ContentLength = bytes.Length;
 
             // setup the stream and write the data
-            Stream s = rq.GetRequestStream();
-            s.Write(bytes, 0, bytes.Length);
-            s.Flush();
-            s.Close();
+            var requestStream = rq.GetRequestStream();
+            requestStream.Write(bytes, 0, bytes.Length);
+            requestStream.Close();
 
             // get the respones stream from our "request"
-            WebResponse wr = rq.GetResponse();
+            var webResponse = rq.GetResponse();
 
-            using (XmlTextReader rdr = new XmlTextReader(theUrl, wr.GetResponseStream()))
+            using (var xmlResposneReader = new XmlTextReader(theUrl, webResponse.GetResponseStream()))
             {
-                // set resolver to null
-                XmlUrlResolver resolver = null;
-
                 // if we are going to validate, make 
                 // instance of the XmlUrlResolver
                 if (validateDtd == true)
                 {
-                    resolver = new XmlUrlResolver();
+                    var resolver = new XmlUrlResolver();
                     resolver.Credentials = nc;
+                    xmlResposneReader.XmlResolver = resolver;
+                }
+                else
+                {
+                    // do not do any validation
+                    xmlResposneReader.XmlResolver = null;
                 }
                 
-                // set the resolver (either null, or if DTD the instance)
-                rdr.XmlResolver = resolver;
-
-                // Create the XmlDocument.
-                XmlDocument response = new XmlDocument();
-
                 try
                 {
-                    response.Load(rdr);
-                    tempRoot = response.DocumentElement;
-                    return tempRoot;
+                    // Create the XmlDocument.
+                    XmlDocument response = new XmlDocument();
+                    response.Load(xmlResposneReader);
+                    return response.DocumentElement;
                 }
                 catch (Exception ex)
                 {
                     // don't show message but raise an error!!
                     Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
-                    tempRoot = null;
-                    return tempRoot;
+                    return null;
                 }
                 finally
                 {
-                    rdr.Close();
+                    xmlResposneReader.Close();
                 }
             } // using
         } // RootOfDoc
