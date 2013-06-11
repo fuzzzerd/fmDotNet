@@ -7,10 +7,7 @@ namespace fmDotNet.Tests
     [TestClass]
     public class FMSAxmlTests
     {
-        public FMSAxmlTests()
-        {
-
-        }
+        public FMSAxmlTests() { }
 
         FMSAxml SetupFMSAxml()
         {
@@ -29,68 +26,73 @@ namespace fmDotNet.Tests
         [TestMethod]
         public void ListFiles_ShouldReturn_OneOrMore()
         {
-            // arrange
+            // arrange & act (in this case)
             var fms = this.SetupFMSAxml();
 
-            // act
-            var files = fms.GetFiles();
-
             // assert
-            Assert.IsTrue(files.Count >= 1);
+            Assert.IsTrue(fms.AvailableDatabases.Count >= 1);
         }
 
-
         [TestMethod]
-        public void SetDB_NoSkip_ShouldRead_Layouts()
+        public void SetDatabase_Should_Update_Current_Database()
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            var files = fms.GetFiles();
+
+            // act
+            fms.SetDatabase(fms.AvailableDatabases.FirstOrDefault(), false);
+
+            // assert
+            Assert.AreEqual(fms.AvailableDatabases.FirstOrDefault(), fms.CurrentDatabase);
+        }
+
+        [TestMethod]
+        public void SetDatabase_NoSkip_ShouldRead_Layouts()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
             
             // act
-            fms.SetDB(files.FirstOrDefault(), false);
+            fms.SetDatabase(fms.AvailableDatabases.FirstOrDefault(), false);
 
             // assert
             Assert.IsTrue(fms.AvailableLayouts.Count >= 1);
         }
 
         [TestMethod]
-        public void SetDB_SetSkip_Should_ReturnNo_Layouts()
+        public void SetDatabase_SetSkip_Should_ReturnNo_Layouts()
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            var files = fms.GetFiles();
 
             // act
-            fms.SetDB(files.FirstOrDefault(), true);
+            fms.SetDatabase(fms.AvailableDatabases.FirstOrDefault(), true);
 
             // assert
             Assert.IsTrue(fms.AvailableLayouts.Count == 0);
         }
 
         [TestMethod]
-        public void SetDB_NoSkip_ShouldRead_Scripts()
+        public void SetDatabase_NoSkip_ShouldRead_Scripts()
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            var files = fms.GetFiles();
 
             // act
-            fms.SetDB(files.FirstOrDefault(), false);
+            fms.SetDatabase(fms.AvailableDatabases.FirstOrDefault(), false);
 
             // assert
             Assert.IsTrue(fms.AvailableScripts.Count >= 1);
         }
 
         [TestMethod]
-        public void SetDB_SetSkip_Should_ReturnNo_Scripts()
+        public void SetDatabase_SetSkip_Should_ReturnNo_Scripts()
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            var files = fms.GetFiles();
 
             // act
-            fms.SetDB(files.FirstOrDefault(), true);
+            fms.SetDatabase(fms.AvailableDatabases.FirstOrDefault(), true);
 
             // assert
             Assert.IsTrue(fms.AvailableScripts.Count == 0);

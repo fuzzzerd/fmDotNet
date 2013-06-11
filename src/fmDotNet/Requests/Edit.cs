@@ -46,7 +46,7 @@ namespace fmDotNet.Requests
             theRequest += editCommand;
 
             String URLstring = fms.Protocol + "://" + fms.ServerAddress + ":" + fms.Port + "/fmi/xml/fmresultset.xml";
-            String theData = "-db=" + fms.CurrentDataBase + "&-lay=" + fms.CurrentLayout + theRequest;
+            String theData = "-db=" + fms.CurrentDatabase + "&-lay=" + fms.CurrentLayout + theRequest;
             String errorCode = "";
             String theRecordID = "";
             String theModID = "";

@@ -42,7 +42,7 @@ namespace fmDotNet.Requests
 
             // setup the URL and the DATA as seperate strings
             String URLstring = fms.Protocol + "://" + fms.ServerAddress + ":" + fms.Port + "/fmi/xml/fmresultset.xml";
-            String theData = "-db=" + fms.CurrentDataBase + "&-lay=" + fms.CurrentLayout + theRequest;
+            String theData = "-db=" + fms.CurrentDatabase + "&-lay=" + fms.CurrentLayout + theRequest;
 
             String errorCode = "";
             String theRecordID = "";

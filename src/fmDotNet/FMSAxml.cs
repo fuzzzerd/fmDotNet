@@ -10,7 +10,9 @@
  *  # NB - 09/18/2009 - Fixed an issue in PopulateRow with parsing numbers.
  *  # NB - 2013-06-04 - Switched to POST for all web requests.
  *  # NB - 2013-06-07 - Cleaned up constructor code, to follow DRY.
- */
+ *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation. 
+ *                      Both FMS12 and FMS13 appear to fail DTD validation, FMS11 works as expected.
+ */ 
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;
 using System;
@@ -19,7 +21,6 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Xml;
 
 namespace fmDotNet
@@ -63,7 +64,7 @@ namespace fmDotNet
         /// Read-only List of available files.
         /// </summary>
         /// <value></value>
-        public ICollection<String> AvailableDBs
+        public ICollection<String> AvailableDatabases
         {
             get
             {
@@ -100,9 +101,9 @@ namespace fmDotNet
 
         #region "Public Properties"
         /// <summary>
-        /// Represents the currently selected FM file, set by the "setDB" method.
+        /// Represents the currently selected FM file, set by the "SetDatabase" method.
         /// </summary>
-        public String CurrentDataBase { get; set; }
+        public String CurrentDatabase { get; set; }
         public String CurrentLayout { get; set; }
         public String ResponseLayout { get; set; }
         public String BaseUrl { get; set; }
@@ -274,9 +275,9 @@ namespace fmDotNet
         /// </summary>
         /// <param name="theDB">The FM file name.</param>
         /// <remarks>Populates the Lists of layouts and scripts if successful.</remarks>
-        public void SetDB(string theDB)
+        public void SetDatabase(string theDB)
         {
-            SetDB(theDB, true);
+            SetDatabase(theDB, true);
         }
 
         /// <summary>
@@ -285,16 +286,16 @@ namespace fmDotNet
         /// <param name="theDB">The FM file name.</param>
         /// <param name="skipScriptsAndLayouts">Specifies if we should skip populating the Lists of Scripts/Layouts. 
         /// Puts fmDotNet in "quick" switch mode if set to true, which skips layout validation.</param>
-        public void SetDB(String theDB, Boolean skipScriptsAndLayouts)
+        public void SetDatabase(String theDB, Boolean skipScriptsAndLayouts)
         {
             // set the current "mode"
             checkFileAndLayout = !skipScriptsAndLayouts;
 
             // if the database is available
-            if (CheckDB(theDB) == true)
+            if (CheckDatabase(theDB) == true)
             {
                 // set the database
-                CurrentDataBase = theDB;
+                CurrentDatabase = theDB;
 
                 // if we were told to skip layout/scripts skip or process
                 if (checkFileAndLayout == true)
@@ -510,7 +511,7 @@ namespace fmDotNet
                 {
                     if (f.type == "container")
                     {
-                        temp = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/cnt/data.jpg?-db=" + CurrentDataBase + "&-lay=" + CurrentLayout + "&-recid=" + recordID + "&-field=" + fieldName;
+                        temp = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/cnt/data.jpg?-db=" + CurrentDatabase + "&-lay=" + CurrentLayout + "&-recid=" + recordID + "&-field=" + fieldName;
                     }
                     else
                     {
@@ -556,7 +557,7 @@ namespace fmDotNet
             // and parse it out to get the data
             List<String> temp = new List<String>();
             String URLstring = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/FMPXMLLAYOUT.xml";
-            String theData = "-db=" + CurrentDataBase + "&-lay=" + CurrentLayout + "&-view";
+            String theData = "-db=" + CurrentDatabase + "&-lay=" + CurrentLayout + "&-view";
             String theError = "0";
 
             try
@@ -625,7 +626,7 @@ namespace fmDotNet
              */
             List<String> temp = new List<String>();
             String URLstring = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/FMPXMLLAYOUT.xml";
-            String theData = "-db=" + CurrentDataBase + "&-lay=" + Uri.EscapeUriString(theLayout) + "&-view";
+            String theData = "-db=" + CurrentDatabase + "&-lay=" + Uri.EscapeUriString(theLayout) + "&-view";
             String theError = "0";
 
             try
@@ -682,7 +683,7 @@ namespace fmDotNet
             {
                 int temp = 0;
                 String URLstring = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/fmresultset.xml";
-                String theData = "-db=" + CurrentDataBase + "&-lay=" + Uri.EscapeUriString(chosenLayout) + "&-view";
+                String theData = "-db=" + CurrentDatabase + "&-lay=" + Uri.EscapeUriString(chosenLayout) + "&-view";
                 String errorCode = "0";
 
                 try
@@ -714,7 +715,7 @@ namespace fmDotNet
                 catch (Exception ex)
                 {
                     Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
-                    throw new System.Xml.XmlException("Error in retrieving the total record count for layout: " + chosenLayout + ", of file: " + CurrentDataBase);
+                    throw new System.Xml.XmlException("Error in retrieving the total record count for layout: " + chosenLayout + ", of file: " + CurrentDatabase);
                 } // catch
                 finally
                 {
@@ -739,7 +740,7 @@ namespace fmDotNet
 
             List<FMField> temp = null;
             String URLstring = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/fmresultset.xml";
-            String theData = "-db=" + CurrentDataBase + "&-lay=" + Uri.EscapeUriString(chosenLayout) + "&-view";
+            String theData = "-db=" + CurrentDatabase + "&-lay=" + Uri.EscapeUriString(chosenLayout) + "&-view";
             String errorCode = "";
 
             try
@@ -805,7 +806,7 @@ namespace fmDotNet
             catch (Exception ex)
             {
                 Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
-                throw new System.Xml.XmlException("Error in retrieving field information for layout: " + chosenLayout + ", of file: " + CurrentDataBase);
+                throw new System.Xml.XmlException("Error in retrieving field information for layout: " + chosenLayout + ", of file: " + CurrentDatabase);
             } // catch
 
             return temp;
@@ -922,7 +923,7 @@ namespace fmDotNet
         /// </summary>
         /// <param name="theDB">The file name.</param>
         /// <returns>true if the file is available.</returns>
-        private Boolean CheckDB(String theDB)
+        private Boolean CheckDatabase(String theDB)
         {
             // returns true if the db was found in the available files
             bool temp = false;
@@ -968,7 +969,7 @@ namespace fmDotNet
         } // MakeURL
 
         /// <summary>
-        /// Gets the list of layout names for the chosen file.  Requires that a file has been chosen with SetDB().
+        /// Gets the list of layout names for the chosen file.  Requires that a file has been chosen with SetDatabase().
         /// </summary>
         /// <remarks>http://testserver/fmi/xml/fmresultset.xml?-db=wim_MLB&-layoutnames</remarks>
         /// <returns>List of layout names</returns>
@@ -978,7 +979,7 @@ namespace fmDotNet
 
             // go grab the layouts for this file
 
-            string URLString = BaseUrl + "-db=" + CurrentDataBase + "&-layoutnames";
+            string URLString = BaseUrl + "-db=" + CurrentDatabase + "&-layoutnames";
             string theError = "0";
             int foundLayouts = 0;
 
@@ -1063,7 +1064,7 @@ namespace fmDotNet
         } // GetLayouts
 
         /// <summary>
-        /// Gets the list of scripts in the chosen file. Requires that a file has been chosen with SetDB().
+        /// Gets the list of scripts in the chosen file. Requires that a file has been chosen with SetDatabase().
         /// </summary>
         /// <remarks>http://testserver/fmi/xml/fmresultset.xml?-db=wim_MLB&-scriptnames</remarks>
         /// <returns>List of script names</returns>
@@ -1073,7 +1074,7 @@ namespace fmDotNet
 
             // go grab the layouts for this file
 
-            string URLString = BaseUrl + "-db=" + CurrentDataBase + "&-scriptnames";
+            string URLString = BaseUrl + "-db=" + CurrentDatabase + "&-scriptnames";
             string theError = "0";
 
             HttpWebRequest rq = (HttpWebRequest)WebRequest.Create(URLString);
