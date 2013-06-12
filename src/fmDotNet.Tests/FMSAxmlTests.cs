@@ -115,6 +115,39 @@ namespace fmDotNet.Tests
             // assert
             Assert.IsTrue(fms.AvailableScripts.Count == 0);
         }
+
+        [TestMethod]
+        public void SetValidLayout_Should_Update_CurrentLayout()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            var db = fms.AvailableDatabases.FirstOrDefault();
+            fms.SetDatabase(db, false);
+            var lay = fms.AvailableLayouts.FirstOrDefault();
+
+            // act
+            fms.SetLayout(lay);
+            
+            // assert
+            Assert.AreEqual(lay, fms.CurrentLayout);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MissingMemberException))]
+        public void SetInvalidLayout_Should_Update_CurrentLayout()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            var db = fms.AvailableDatabases.FirstOrDefault();
+            fms.SetDatabase(db, false);
+            var lay = Guid.NewGuid().ToString();
+
+            // act
+            fms.SetLayout(lay);
+
+            // assert
+            Assert.AreEqual(lay, fms.CurrentLayout);
+        }
         #endregion
     }
 }

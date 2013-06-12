@@ -6,9 +6,9 @@ using System.Data;
 namespace fmDotNet.Tests
 {
     [TestClass]
-    public class FindRequestTests
+    public class FindTests
     {
-        public FindRequestTests() { }
+        public FindTests() { }
 
         FMSAxml SetupFMSAxml()
         {
@@ -62,7 +62,7 @@ namespace fmDotNet.Tests
             var fms = this.SetupFMSAxml();
             fms.SetDatabase("fmDotNet.Tests", false);
             fms.SetLayout("FindRequest.Tests");
-            var find = fms.CreateFindRequest(Enumerations.SearchType.AllRecords);
+            var find = fms.CreateFindRequest(Enumerations.SearchType.Subset);
             
             // depends on data must make sure data is in file.
             var queryParm = "Greatest";
