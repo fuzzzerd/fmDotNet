@@ -328,9 +328,18 @@ namespace fmDotNet.Requests
             var orsQ = string.Join("", ors.ToArray());
             var omitsQ = string.Join("", omits.ToArray());
 
-            sb.Append(andsQ);
-            sb.Append(orsQ);
-            sb.Append(omitsQ);
+            if (!String.IsNullOrEmpty(andsQ) && andsQ != "();")
+            {
+                sb.Append(andsQ);
+            }
+            if (!String.IsNullOrEmpty(orsQ))
+            {
+                sb.Append(orsQ);
+            }
+            if (!String.IsNullOrEmpty(omitsQ))
+            {
+                sb.Append(omitsQ);
+            }
 
             for (int i = 0; i < FindCriteria.Count; i++)
             {
