@@ -101,6 +101,20 @@ namespace fmDotNet.Tests
             // assert
             Assert.IsTrue(fms.AvailableScripts.Count == 0);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(MissingMemberException))]
+        public void SetDatabase_ToDatabaseThatIsNotThere_Should_Throw()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+
+            // act
+            fms.SetDatabase(Guid.NewGuid().ToString());
+
+            // assert
+            Assert.IsTrue(fms.AvailableScripts.Count == 0);
+        }
         #endregion
     }
 }
