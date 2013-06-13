@@ -2,7 +2,7 @@
 
 This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/WizardSoftware/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
 
-If you are familiar with FM6 web publishing or FileMaker's PHP API, fmDotNet will feel familiar to you as the core principles are very similar. 
+If you are familiar with FileMaker 6 CDML Web Publishing or the FileMaker PHP API, fmDotNet will feel familiar to you. Many of the core principles and techniques are the same. The operations and vocabulary are the same as in FileMaker Pro.
 
 ### Getting Started with fmDotNet
 
@@ -34,11 +34,11 @@ You can edit also perform complex finds with code like the following:
     cpfRequest.AddSearchCriterion("Colors::Name", "Red", true, false);
     var response = cpfRequest.Execute();
 
-This finds all items where the color is Red **OR** Blue. Note the search on related fields via *Table::Field*.
+This finds all items where the color is Red **OR** Blue. Note the search is on related fields via *Table::Field*.
 
 ### Additional fmDotNet Example Usage
 
-Browse the code in the [test project fmDotNet.Tests](https://github.com/WizardSoftware/fmDotNet/tree/master/src/fmDotNet.Tests) for basic usage of the library. This is the code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing specific tasks in context.
+Browse the code in the test project [fmDotNet.Tests](https://github.com/WizardSoftware/fmDotNet/tree/master/src/fmDotNet.Tests) for basic usage of the library. This is the automated test code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing usage of fmDotNet in the context of a real application.
 
 ### Contributing to fmDotNet
 
@@ -46,7 +46,7 @@ Browse the code in the [test project fmDotNet.Tests](https://github.com/WizardSo
  2. Submit an issue/bug with steps to reproduce it.
  3. Submit a wiki page with more detailed examples.
  
-Please make sure that any changes submitted to the core fmDotNet project pass the tests in fmDotNet.Tests.
+Please make sure that that changes you submit to the core fmDotNet project pass the tests in fmDotNet.Tests or explain why they don't and why the test should be updated.
 
 ### FileMaker Documentation
 
