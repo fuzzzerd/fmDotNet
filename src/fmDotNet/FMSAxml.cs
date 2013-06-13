@@ -12,6 +12,7 @@
  *  # NB - 2013-06-07 - Cleaned up constructor code, to follow DRY.
  *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation, both FMS12 and FMS13 appear 
  *                      to fail DTD validation, FMS11 works as expected.
+ *  # NB - 2013-06-13 - Cleaned up MakeUrl (removed ?, and added where as argument when needed).
  */
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;
@@ -345,13 +346,13 @@ namespace fmDotNet
         }
 
         /// <summary>
-        /// Sets the layout.  Throws an MissingMemberException if the layout is not in the chosen file.
+        /// Sets the layout. Throws an MissingMemberException if the layout is not in the chosen file.
         /// </summary>
         /// <param name="returnFrom">The layout the found set is returned from.</param>
         /// <param name="useInSearch">The actual layout used in the search.</param>
         public void SetLayout(String returnFrom, String useInSearch)
         {
-            if (CheckLayout(returnFrom) == true && CheckLayout(useInSearch))
+            if (CheckLayout(returnFrom) && CheckLayout(useInSearch))
             {
                 ResponseLayout = Uri.EscapeUriString(useInSearch);
                 CurrentLayout = Uri.EscapeUriString(returnFrom);
@@ -929,13 +930,7 @@ namespace fmDotNet
         private Boolean CheckDatabase(String theDB)
         {
             // returns true if the db was found in the available files
-            bool temp = false;
-
-            if (availableDBs.Contains(theDB))
-            {
-                temp = true;
-            }
-            return temp;
+            return availableDBs.Contains(theDB);
         }
 
         /// <summary>
@@ -947,16 +942,11 @@ namespace fmDotNet
         {
             // returns true if the layout was found in the chosen database
             // List availableLayouts = GetFiles();
-            bool temp = false;
-            if (availableLayouts.Contains(theLayout))
-            {
-                temp = true;
-            }
-            return temp;
+            return availableLayouts.Contains(theLayout);
         }
 
         /// <summary>
-        /// Makes the base URL to connect to FMSA
+        /// Makes the base URL to connect to FMS
         /// </summary>
         /// <remarks> string is case sensitive for xml grammar!! </remarks>
         /// <returns>URL string</returns>
@@ -964,15 +954,18 @@ namespace fmDotNet
         {
             // add error checking here to make sure all pieces are correct
             // raise error if not
-            string temp = "";
+            var returnValue = String.Format("{0}://{1}:{2}/fmi/xml/{3}.xml", 
+                Protocol, 
+                ServerAddress, 
+                Port, 
+                XmlGrammer);
 
-            temp = Protocol + "://" + ServerAddress + ":" + Port.ToString() + "/fmi/xml/" + XmlGrammer + ".xml?";
-            return temp;
+            return returnValue;
 
         } // MakeURL
 
         /// <summary>
-        /// Gets the list of layout names for the chosen file.  Requires that a file has been chosen with SetDatabase().
+        /// Gets the list of layout names for the chosen file. Requires that a file has been chosen with SetDatabase().
         /// </summary>
         /// <remarks>http://testserver/fmi/xml/fmresultset.xml?-db=wim_MLB&-layoutnames</remarks>
         /// <returns>List of layout names</returns>
@@ -982,7 +975,7 @@ namespace fmDotNet
 
             // go grab the layouts for this file
 
-            string URLString = BaseUrl + "-db=" + CurrentDatabase + "&-layoutnames";
+            string URLString = BaseUrl + "?-db=" + CurrentDatabase + "&-layoutnames";
             string theError = "0";
             int foundLayouts = 0;
 
@@ -1077,7 +1070,7 @@ namespace fmDotNet
 
             // go grab the layouts for this file
 
-            string URLString = BaseUrl + "-db=" + CurrentDatabase + "&-scriptnames";
+            string URLString = BaseUrl + "?-db=" + CurrentDatabase + "&-scriptnames";
             string theError = "0";
 
             HttpWebRequest rq = (HttpWebRequest)WebRequest.Create(URLString);
@@ -1168,11 +1161,6 @@ namespace fmDotNet
         {
             // setup the credentials to use for making the request
             NetworkCredential nc = new NetworkCredential(account, pw);
-
-            // reminant of the original query string method in each Request type
-            // TODO: Remove question from query data in each request type since
-            // all data is sent to FileMaker Server via HTTP POST.
-            theUrl = theUrl.Replace("?", String.Empty);
 
             // prepare data for being sent 
             // takes our string and makes a byte array.
