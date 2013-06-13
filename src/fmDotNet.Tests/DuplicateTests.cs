@@ -24,7 +24,7 @@ namespace fmDotNet.Tests
         }
 
         [TestMethod]
-        public void DuplicateRecord_Should_CreateNewSame()
+        public void DuplicateRecord_Should_Duplicate_With_New_RecordID()
         {
             // arrange 
             var fms = this.SetupFMSAxml();
@@ -36,7 +36,7 @@ namespace fmDotNet.Tests
             
             // act
             var dupReq = fms.CreateDuplicateRequest(newRecID);
-            var dupRecID = dupReq.Execute();
+            var dupRecID = dupReq.Execute(); 
 
             // assert
             Assert.IsNotNull(dupRecID);
