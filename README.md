@@ -34,11 +34,11 @@ You can edit also perform complex finds with code like the following:
     cpfRequest.AddSearchCriterion("Colors::Name", "Red", true, false);
     var response = cpfRequest.Execute();
 
-This finds all items where the color is Red **OR** Blue.
+This finds all items where the color is Red **OR** Blue. Note the search on related fields via *Table::Field*.
 
 ### Additional fmDotNet Example Usage
 
-Browse the code in the unit test project [fmDotNet.Tests](https://github.com/WizardSoftware/fmDotNet/tree/master/src/fmDotNet.Tests) for example usage. This is the code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing specific tasks in context.
+Browse the code in the [test project fmDotNet.Tests](https://github.com/WizardSoftware/fmDotNet/tree/master/src/fmDotNet.Tests) for basic usage of the library. This is the code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing specific tasks in context.
 
 ### Contributing to fmDotNet
 
