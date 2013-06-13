@@ -44,5 +44,21 @@ namespace fmDotNet.Tests
             // clean up
             fms.CreateDeleteRequest(dupRecID).Execute();
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void DuplicateRequest_ShouldError_OnInvalid_RecordID()
+        {
+            // arrange 
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetLayout("DuplicateRequest.Tests");
+
+            // act
+            var returnCode = fms.CreateDeleteRequest(Guid.NewGuid().ToString()).Execute();
+
+            // assert
+            Assert.AreNotEqual("0", returnCode);
+        }
     }
 }
