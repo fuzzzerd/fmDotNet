@@ -55,6 +55,22 @@ Documentation for the FileMaker APIs that fmDotNet covers.
  1. [FileMaker Server 12 Web Publishing with XML](http://www.filemaker.com/support/product/docs/12/fms/fms12_cwp_xml_en.pdf)
  2. [FileMaker Server 11 Web Publishing with XSLT and XML](http://www.filemaker.com/support/product/docs/fms/fms11_cwp_xslt_en.pdf)
 
+### Version
+
+We attempt to stick to [Semantic Versioning](http://semver.org/). Using the Major.Minor.Patch syntax, we attempt to follow the basic rules
+
+ 1. MAJOR version when you make incompatible API changes,
+ 2. MINOR version when you add functionality in a backwards-compatible manner, and
+ 3. PATCH version when you make backwards-compatible bug fixes.
+ 
+### Available on NuGet.org
+
+From Visual Studio, open the Package Manager Console
+
+    PM> Install-Package fmDotNet
+	
+https://nuget.org/packages/fmDotNet/
+
 ### License
 
 [Common Public License Version 1.0](http://opensource.org/licenses/cpl1.0.txt)
