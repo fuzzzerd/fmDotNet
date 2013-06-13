@@ -14,7 +14,7 @@ using System.Xml;
 namespace fmDotNet.Requests
 {
     /// <summary>
-    /// Class representing a FindRequest
+    /// Class representing a CompoundFindRequest.
     /// </summary>
     /// <remarks>While this class is publicly available, use the "CreateCompoundFindRequest" method to create a new request.</remarks>
     public class CompoundFind
@@ -363,7 +363,15 @@ namespace fmDotNet.Requests
             //fieldString += "&" + Uri.EscapeUriString(theField) + "=" + Uri.EscapeUriString(fieldValue) + "&" + Uri.EscapeUriString(theField) + ".op=" + RealSearchCriterium(op);
         }
 
-        public void AddSearchCriterion(string fieldName, string fieldValue, Boolean isOr, Boolean isOmit)
+        /// <summary>
+        /// Adds a search criterion to this compound find. Each item will be anded with the previous unless
+        /// isOr and/or isOmit are set to true.
+        /// </summary>
+        /// <param name="fieldName">Field name to search.</param>
+        /// <param name="fieldValue">The value to search for</param>
+        /// <param name="isOr">Is this find an OR find? Default is AND. Default is false.</param>
+        /// <param name="isOmit">Omit records that match this criteria. Default is false</param>
+        public void AddSearchCriterion(string fieldName, string fieldValue, Boolean isOr = false, Boolean isOmit = false)
         {
             var fc = new FindCriterion()
             {
