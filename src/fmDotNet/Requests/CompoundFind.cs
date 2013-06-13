@@ -405,7 +405,7 @@ namespace fmDotNet.Requests
         public void AddSortField(String sortField, Sort AorD)
         {
             sortCounter++;
-            theRequest += "&-sortfield." + sortCounter + "=" + Uri.EscapeUriString(sortField) + "&-sortorder." + sortCounter + "=" + AorD.ToString();
+            theRequest += "&-sortfield." + sortCounter + "=" + Uri.EscapeUriString(sortField) + "&-sortorder." + sortCounter + "=" + AorD.ToString().ToLower();
         }
 
         /// <summary>
