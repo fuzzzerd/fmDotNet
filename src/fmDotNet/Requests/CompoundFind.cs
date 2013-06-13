@@ -2,6 +2,7 @@
  * Revisions:
  *  # NB - 10/28/2008 10:49:31 AM - Source File Created                      
  *  # NB - 2013-06-07 - Changed constructor to `internal` to force correct usage.
+ *  # NB - 2031-06-13 - Made parameters optional for AddFindCriterion, default to false, same as FM API.
  */
 using fmDotNet.Enumerations;
 using System;
@@ -19,6 +20,10 @@ namespace fmDotNet.Requests
     /// <remarks>While this class is publicly available, use the "CreateCompoundFindRequest" method to create a new request.</remarks>
     public class CompoundFind
     {
+        /// <summary>
+        /// Class used to store each new find operation. Each is 
+        /// roughly the same as a new FindRequest in FileMaker Pro.
+        /// </summary>
         internal class FindCriterion
         {
             public string FieldName { get; set; }
@@ -359,8 +364,6 @@ namespace fmDotNet.Requests
         internal void AddSearchCriterion(FindCriterion criterion)
         {
             FindCriteria.Add(criterion);
-
-            //fieldString += "&" + Uri.EscapeUriString(theField) + "=" + Uri.EscapeUriString(fieldValue) + "&" + Uri.EscapeUriString(theField) + ".op=" + RealSearchCriterium(op);
         }
 
         /// <summary>
