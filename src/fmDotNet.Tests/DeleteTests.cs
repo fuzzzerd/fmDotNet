@@ -31,6 +31,7 @@ namespace fmDotNet.Tests
             fms.SetDatabase("fmDotNet.Tests", false);
             fms.SetLayout("DuplicateRequest.Tests");
 
+            // find one and duplicate it, so we can delete it
             var fr = fms.CreateFindRequest(Enumerations.SearchType.RandomRecord);
             var newRecID = fr.Execute().Tables[0].Rows[0]["recordID"].ToString();
             var dupReq = fms.CreateDuplicateRequest(newRecID);
@@ -41,6 +42,22 @@ namespace fmDotNet.Tests
 
             // assert
             Assert.AreEqual("0", returnCode);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void DeleteRequest_ShouldError_OnInvalid_RecordID()
+        {
+            // arrange 
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetLayout("DuplicateRequest.Tests");
+
+            // act
+            var returnCode = fms.CreateDeleteRequest(Guid.NewGuid().ToString()).Execute();
+
+            // assert
+            Assert.AreNotEqual("0", returnCode);
         }
     }
 }
