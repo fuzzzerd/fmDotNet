@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CompoundFindTests.cs" />
+    <Compile Include="NewRecordTests.cs" />
     <Compile Include="DeleteTests.cs" />
     <Compile Include="DuplicateTests.cs" />
     <Compile Include="FindTests.cs" />
