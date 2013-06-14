@@ -59,6 +59,7 @@ There are several differences between this fork of fmDotNet and the original. Th
  1. Uses HTTP POST for all requests to FileMaker Server
  2. Has method, property, and field names in line with [MSDN Naming Guidelines](http://msdn.microsoft.com/en-us/library/vstudio/ms229002.aspx)
  3. Does not include support for ADODB RecordSets
+ 4. Is compiled against .NET 3.5 SP1
 
 ### Contributing to fmDotNet
 
