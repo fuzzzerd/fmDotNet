@@ -329,21 +329,21 @@ namespace fmDotNet.Requests
             var ors = FindCriteria.Where(q => q.IsOr).Select(q => "(q" + ((int)FindCriteria.IndexOf(q) + 1) + ");");
             var omits = FindCriteria.Where(q => q.IsOmit).Select(q => "!(q" + ((int)FindCriteria.IndexOf(q) + 1) + ");");
             
-            var andsQ = String.Format("({0});", string.Join(", ", ands.ToArray()));
-            var orsQ = string.Join("", ors.ToArray());
-            var omitsQ = string.Join("", omits.ToArray());
+            var andQueryIDs = String.Format("({0});", string.Join(", ", ands.ToArray()));
+            var orQueryIDs = string.Join("", ors.ToArray());
+            var omitQueryIDs = string.Join("", omits.ToArray());
 
-            if (!String.IsNullOrEmpty(andsQ) && andsQ != "();")
+            if (!String.IsNullOrEmpty(andQueryIDs) && andQueryIDs != "();")
             {
-                sb.Append(andsQ);
+                sb.Append(andQueryIDs);
             }
-            if (!String.IsNullOrEmpty(orsQ))
+            if (!String.IsNullOrEmpty(orQueryIDs))
             {
-                sb.Append(orsQ);
+                sb.Append(orQueryIDs);
             }
-            if (!String.IsNullOrEmpty(omitsQ))
+            if (!String.IsNullOrEmpty(omitQueryIDs))
             {
-                sb.Append(omitsQ);
+                sb.Append(omitQueryIDs);
             }
 
             for (int i = 0; i < FindCriteria.Count; i++)

@@ -93,6 +93,7 @@ namespace fmDotNet.Tests
             var cpfRequest = fms.CreateCompoundFindRequest();
             cpfRequest.AddSearchCriterion("CupTypes::Type", "Glass", false, false);
             cpfRequest.AddSearchCriterion("Colors::Name", "Red", false, false);
+
             cpfRequest.AddSearchCriterion("Description", "Chipped", false, true);
             var response = cpfRequest.Execute();
 
