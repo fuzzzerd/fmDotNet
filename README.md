@@ -1,18 +1,18 @@
-##fmDotNet: a wrapper for the FileMaker Server XML API
+##fmDotNet: a wrapper for the FileMaker XML API
 
 This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/WizardSoftware/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
 
-If you are familiar with FileMaker 6 CDML Web Publishing or the FileMaker PHP API, fmDotNet will feel familiar to you. Many of the core principles and techniques are the same. The operations and vocabulary are the same as in FileMaker Pro.
+If you are familiar with FileMaker Pro 6 CDML Web Publishing or the FileMaker PHP API, fmDotNet will feel familiar to you. Many of the core principles and techniques are the same. The operations and vocabulary are the same as in FileMaker Pro.
 
 ## Getting Started with fmDotNet
 
-### Available on NuGet!
+### fmDotNet is available on NuGet!
 
 To install fmDotNet to your project, from within [Visual Studio](http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products), run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console)
 
     PM> Install-Package fmDotNet
 	
-https://nuget.org/packages/fmDotNet/
+Nuget Package Site: https://nuget.org/packages/fmDotNet/
 
 ### Using fmDotNet in Code
 
@@ -25,7 +25,7 @@ You can start querying data from your FileMaker database with just a few lines o
     request.AddSearchField("YourFieldName", "value-to-query-for");
     var response = request.Execute();
 
-You can query against related data:
+You can query against related data too:
 
     var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
     fms.SetDatabase("yourDatabase");
@@ -34,7 +34,7 @@ You can query against related data:
     request.AddSearchField("RELATEDTALE::RelatedField", "value-to-query-for");
     var response = request.Execute();
 	
-*Note: the search is on related fields via Table::Field*.	
+*Note: the search is on related fields via Table::Field where the related field is on `yourLayout`*.
 
 You can perform complex finds with code like the following:
 
@@ -46,7 +46,7 @@ You can perform complex finds with code like the following:
     cpfRequest.AddSearchCriterion("Colors::Name", "Red", true, false);
     var response = cpfRequest.Execute();
 
-This finds all items where the color is Red **OR** Blue. *Note: the search is on related fields via Table::Field*.
+This finds all items where the color is Red **OR** Blue.
 
 ### Additional fmDotNet Example Usage
 
@@ -63,9 +63,9 @@ There are several differences between this fork of fmDotNet and the original. Th
 
 ### Contributing to fmDotNet
 
- 1. Fork us, hit hte Fork button at the top right! Make improvements, add additional tests, and submit a pull request. 
+ 1. [Fork us!](https://github.com/WizardSoftware/fmDotNet/fork) Make improvements, add more (or better) tests. Then make a pull request. 
  2. Submit an issue/bug with steps to reproduce it.
- 3. Submit a wiki page with more detailed examples.
+ 3. Create a wiki page with more detailed examples, tutorials, or documentation.
  
 Please make sure that that changes you submit to the core fmDotNet project pass the tests in fmDotNet.Tests or explain why they don't and why the test should be updated.
 
