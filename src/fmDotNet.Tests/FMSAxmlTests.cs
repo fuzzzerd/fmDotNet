@@ -149,5 +149,68 @@ namespace fmDotNet.Tests
             Assert.AreEqual(lay, fms.CurrentLayout);
         }
         #endregion
+
+        #region "Tests for fmDotNet.Tests.fmp12"
+        [TestMethod]
+        public void GetHardCodedValueListData_ShouldReturn_HardCoded()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetLayout("FindRequest.Tests");
+
+            // act
+            var data = fms.GetValueListData("Hard-Coded");
+
+            // assert
+            Assert.IsTrue(data.Count >= 1);
+        }
+
+        [TestMethod]
+        public void GetHardCodedWithDupeValueListData_ShouldReturn_HardCodedWithDupe()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetLayout("FindRequest.Tests");
+
+            // act
+            var data = fms.GetValueListData("Hard-Coded-Dupe");
+
+            // assert
+            Assert.IsTrue(data.Count >= 1);
+        }
+
+        [TestMethod]
+        public void GetValueListData_ShouldReturn_ValueList_Data()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetLayout("FindRequest.Tests");
+
+            // act
+            var data = fms.GetValueListData("Colors");
+
+            // assert
+            Assert.IsTrue(data.Count >= 1);
+        }
+
+        [TestMethod]
+        public void GetValueList_ShouldReturn_ValueList()
+        {
+            // arrange
+            var fms = this.SetupFMSAxml();
+            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetLayout("FindRequest.Tests");
+
+            // act
+            var data = fms.GetValueList("Colors");
+
+            // assert
+            Assert.IsTrue(data.Count() >= 1);
+        }
+
+        #endregion
     }
 }

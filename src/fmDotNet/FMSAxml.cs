@@ -24,6 +24,8 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Xml;
+using System.Linq;
+
 
 namespace fmDotNet
 {
@@ -557,9 +559,21 @@ namespace fmDotNet
         /// <returns>List of value list items</returns>
         public List<String> GetValueListData(String valuelistName)
         {
+            var data = this.GetValueList(valuelistName);
+
+            return data.Select(x => x.Value).ToList();
+        }
+
+        /// <summary>
+        /// Gets the value list items.
+        /// </summary>
+        /// <param name="valuelistName">Name of the valuelist.</param>
+        /// <returns>A dictionary key/value pair of the value list</returns>
+        public Dictionary<string, string> GetValueList(String valuelistName)
+        {
             // http://testserver/fmi/xml/FMPXMLLAYOUT.xml?-db=xml_repeat_test&-lay=show&-view
             // and parse it out to get the data
-            List<String> temp = new List<String>();
+            var returnData = new Dictionary<string, string>();
             String URLstring = Protocol + "://" + ServerAddress + ":" + Port + "/fmi/xml/FMPXMLLAYOUT.xml";
             String theData = "-db=" + CurrentDatabase + "&-lay=" + CurrentLayout + "&-view";
             String theError = "0";
@@ -572,7 +586,7 @@ namespace fmDotNet
                     this.FMPassword,
                     this.ResponseTimeout,
                     this.DTDValidation);
-
+                
                 foreach (XmlNode rootNode in root.ChildNodes)
                 {
                     switch (rootNode.Name.ToLower())
@@ -598,7 +612,10 @@ namespace fmDotNet
                                 {
                                     foreach (XmlNode v in vl.ChildNodes)
                                     {
-                                        temp.Add(v.InnerText);
+                                        if(! returnData.Keys.Contains(v.InnerText))
+                                        {
+                                            returnData.Add(v.InnerText, v.Attributes.GetNamedItem("DISPLAY").Value);
+                                        }
                                     }
                                     break;
                                 }
@@ -607,14 +624,14 @@ namespace fmDotNet
                     }
                 } // foreach
             } // try
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Tools.LogUtility.WriteEntry(ex,
                     System.Diagnostics.EventLogEntryType.Error);
                 throw;
             }
 
-            return temp;
+            return returnData;
         }
 
         /// <summary>
