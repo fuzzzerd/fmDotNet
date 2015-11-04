@@ -4,13 +4,15 @@ This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It 
 
 If you are familiar with FileMaker Pro 6 CDML Web Publishing or the FileMaker PHP API, fmDotNet will feel familiar to you. Many of the core principles and techniques are the same. The operations and vocabulary are the same as in FileMaker Pro.
 
+The integration tests provided with this library have been tested against FileMaker Server 12 and 14 with full passing grades.
+
 ## Getting Started with fmDotNet
 
 ### fmDotNet is available on NuGet!
 
 To install fmDotNet to your project, from within [Visual Studio](http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products), run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console)
 
-    PM> Install-Package fmDotNet
+	PM> Install-Package fmDotNet
 	
 Nuget Package Site: https://nuget.org/packages/fmDotNet/
 
@@ -18,33 +20,33 @@ Nuget Package Site: https://nuget.org/packages/fmDotNet/
 
 You can start querying data from your FileMaker database with just a few lines of code:
 
-    var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
-    fms.SetDatabase("yourDatabase");
-    fms.SetLayout("yourLayout");
-    var request = fms.CreateFindRequest(Enumerations.SearchType.Subset);
-    request.AddSearchField("YourFieldName", "value-to-query-for");
-    var response = request.Execute();
+	var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
+	fms.SetDatabase("yourDatabase");
+	fms.SetLayout("yourLayout");
+	var request = fms.CreateFindRequest(Enumerations.SearchType.Subset);
+	request.AddSearchField("YourFieldName", "value-to-query-for");
+	var response = request.Execute();
 
 You can query against related data too:
 
-    var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
-    fms.SetDatabase("yourDatabase");
-    fms.SetLayout("yourLayout");
-    var request = fms.CreateFindRequest(Enumerations.SearchType.Subset);
-    request.AddSearchField("RELATEDTALE::RelatedField", "value-to-query-for");
-    var response = request.Execute();
+	var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
+	fms.SetDatabase("yourDatabase");
+	fms.SetLayout("yourLayout");
+	var request = fms.CreateFindRequest(Enumerations.SearchType.Subset);
+	request.AddSearchField("RELATEDTALE::RelatedField", "value-to-query-for");
+	var response = request.Execute();
 	
 *Note: the search is on related fields via Table::Field where the related field is on `yourLayout`*.
 
 You can perform complex finds with code like the following:
 
-    var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
-    fms.SetDatabase("yourDatabase");
-    fms.SetLayout("yourLayout");
-    var cpfRequest = fms.CreateCompoundFindRequest();
-    cpfRequest.AddSearchCriterion("Colors::Name", "Blue", true, false);
-    cpfRequest.AddSearchCriterion("Colors::Name", "Red", true, false);
-    var response = cpfRequest.Execute();
+	var fms = new fmDotNet.FMSAxml("YourServerName", "user", "passw0rd");
+	fms.SetDatabase("yourDatabase");
+	fms.SetLayout("yourLayout");
+	var cpfRequest = fms.CreateCompoundFindRequest();
+	cpfRequest.AddSearchCriterion("Colors::Name", "Blue", true, false);
+	cpfRequest.AddSearchCriterion("Colors::Name", "Red", true, false);
+	var response = cpfRequest.Execute();
 
 This finds all items where the color is Red **OR** Blue.
 
