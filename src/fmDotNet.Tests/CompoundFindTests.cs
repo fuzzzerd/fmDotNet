@@ -28,7 +28,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
             // find how many red and how many blue we have
             var find = fms.CreateFindRequest(Enumerations.SearchType.AllRecords);
@@ -59,7 +59,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
             // act
@@ -86,7 +86,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
             // act
@@ -116,7 +116,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
             // act

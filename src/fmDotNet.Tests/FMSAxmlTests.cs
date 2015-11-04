@@ -156,7 +156,7 @@ namespace fmDotNet.Tests
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetDatabase("fmDotNet_Tests");
             fms.SetLayout("FindRequest.Tests");
 
             // act
@@ -171,7 +171,7 @@ namespace fmDotNet.Tests
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetDatabase("fmDotNet_Tests");
             fms.SetLayout("FindRequest.Tests");
 
             // act
@@ -186,7 +186,7 @@ namespace fmDotNet.Tests
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetDatabase("fmDotNet_Tests");
             fms.SetLayout("FindRequest.Tests");
 
             // act
@@ -201,7 +201,7 @@ namespace fmDotNet.Tests
         {
             // arrange
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests");
+            fms.SetDatabase("fmDotNet_Tests");
             fms.SetLayout("FindRequest.Tests");
 
             // act

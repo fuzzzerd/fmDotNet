@@ -28,7 +28,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("DuplicateRequest.Tests");
 
             // find one and duplicate it, so we can delete it
@@ -50,7 +50,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("DuplicateRequest.Tests");
 
             // act

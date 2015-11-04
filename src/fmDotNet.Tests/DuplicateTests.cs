@@ -28,7 +28,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("DuplicateRequest.Tests");
 
             var fr = fms.CreateFindRequest(Enumerations.SearchType.RandomRecord);
@@ -51,7 +51,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("DuplicateRequest.Tests");
 
             // act

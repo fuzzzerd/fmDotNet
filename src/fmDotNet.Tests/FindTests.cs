@@ -28,7 +28,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
             var find = fms.CreateFindRequest(Enumerations.SearchType.AllRecords);
             
@@ -44,7 +44,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
             var find = fms.CreateFindRequest(Enumerations.SearchType.RandomRecord);
 
@@ -60,7 +60,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
             var find = fms.CreateFindRequest(Enumerations.SearchType.Subset);
             

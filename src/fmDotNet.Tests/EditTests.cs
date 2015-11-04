@@ -28,7 +28,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
             var random = fms.CreateFindRequest(Enumerations.SearchType.RandomRecord).Execute();
@@ -67,7 +67,7 @@ namespace fmDotNet.Tests
         {
             // arrange 
             var fms = this.SetupFMSAxml();
-            fms.SetDatabase("fmDotNet.Tests", false);
+            fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
             var newName = "Edit request test name";
