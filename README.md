@@ -1,4 +1,4 @@
-##fmDotNet: a wrapper for the FileMaker XML API
+# fmDotNet: a wrapper for the FileMaker XML API
 
 This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/WizardSoftware/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
 
