@@ -310,10 +310,8 @@ namespace fmDotNet.Requests
                 fms.Fields = fmf;
                 return ds;
             }  // try
-            catch(Exception ex)
+            catch
             {
-                Tools.LogUtility.WriteEntry(ex,
-                    System.Diagnostics.EventLogEntryType.Error);
                 throw;
             } // catch
             // return ds;

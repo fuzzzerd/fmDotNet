@@ -98,9 +98,8 @@ namespace fmDotNet.Requests
                  */
                 return theModID;
             }  // try
-            catch (Exception ex)
+            catch
             {
-                Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
                 throw;
             } // catch
         }

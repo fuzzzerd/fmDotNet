@@ -71,9 +71,8 @@ namespace fmDotNet.Requests
                 // return the result
                 return errorCode;
             }  // try
-            catch (Exception ex)
+            catch
             {
-                Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
                 throw;
             } // catch
         }

@@ -1,33 +1,19 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
+using Xunit;
+using fmDotNet;
 
 namespace fmDotNet.Tests
 {
-    [TestClass]
+    [Collection("CompoundFind")]
     public class CompoundFindTests
     {
-        public CompoundFindTests() { }
-
-        FMSAxml SetupFMSAxml()
-        {
-            var asr = new System.Configuration.AppSettingsReader();
-
-            var fms = new FMSAxml(
-                theServer: (string)asr.GetValue("TestServerName", typeof(string)),
-                theAccount: (string)asr.GetValue("TestServerUser", typeof(string)),
-                thePort: (int)asr.GetValue("TestServerPort", typeof(int)),
-                thePW: (string)asr.GetValue("TestServerPass", typeof(string))
-                );
-            return fms;
-        }
-
-        [TestMethod]
+        [Fact]
         public void CompoundFind_Red_OR_Blue_ReturnsRedPlusBlue()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
             // find how many red and how many blue we have
@@ -48,17 +34,17 @@ namespace fmDotNet.Tests
             var response = cpfRequest.Execute();
 
             // assert
-            Assert.IsTrue(blueCount >= 1, "Must have one or more Blues.");
-            Assert.IsTrue(redCount >= 1, "Must have one or more Reds.");
-            Assert.AreEqual(blueCount + redCount, response.Tables[0].Rows.Count);
+            Assert.True(blueCount >= 1, "Must have one or more Blues.");
+            Assert.True(redCount >= 1, "Must have one or more Reds.");
+            Assert.Equal(blueCount + redCount, response.Tables[0].Rows.Count);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void CompoundFind_Red_AND_Glass_ReturnsRedAndGlass()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -77,15 +63,15 @@ namespace fmDotNet.Tests
             }
 
             // assert
-            Assert.AreNotEqual(0, response.Tables[0].Rows.Count, "No records found, check database data"); // make sure we found at least one
-            Assert.AreEqual(countCorrect, response.Tables[0].Rows.Count);
+            Assert.NotEqual(0, response.Tables[0].Rows.Count); // make sure we found at least one
+            Assert.Equal(countCorrect, response.Tables[0].Rows.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void CompoundFind_Red_AND_Glass_OMIT_Chipped_ReturnsRedAndGlass_Without_Chipped()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -107,15 +93,15 @@ namespace fmDotNet.Tests
             }
 
             // assert
-            Assert.AreNotEqual(0, response.Tables[0].Rows.Count, "No records found, check database data"); // make sure we found at least one
-            Assert.AreEqual(countCorrect, response.Tables[0].Rows.Count);
+            Assert.NotEqual(0, response.Tables[0].Rows.Count); // make sure we found at least one
+            Assert.Equal(countCorrect, response.Tables[0].Rows.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void CompoundFind_WithSortOrder_ShouldSort()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -139,8 +125,8 @@ namespace fmDotNet.Tests
             }
 
             // assert
-            Assert.AreNotEqual(0, response.Tables[0].Rows.Count, "No records found, check database data"); // make sure we found at least one
-            Assert.AreEqual(countCorrect, response.Tables[0].Rows.Count);
+            Assert.NotEqual(0, response.Tables[0].Rows.Count); // make sure we found at least one
+            Assert.Equal(countCorrect, response.Tables[0].Rows.Count);
         }
     }
 }

@@ -13,6 +13,7 @@
  *  # NB - 2013-06-11 - Refactored RootOfDoc DTD validation, both FMS12 and FMS13 appear 
  *                      to fail DTD validation, FMS11 works as expected.
  *  # NB - 2013-06-13 - Cleaned up MakeUrl (removed ?, and added where as argument when needed).
+ *  # NB - 2018-03-23 - Clean up for NET Standard 2.0
  */
 using fmDotNet.Enumerations;
 using fmDotNet.Requests;
@@ -64,9 +65,9 @@ namespace fmDotNet
         public Int32 Port { get; private set; }                 // 80 for HTTP or 443 for HTTPS
         public Int32 ResponseTimeout { get; private set; }      // used in HttpWebRequest to set the timeout
         public Boolean DTDValidation { get; private set; }      // false by default because it breaks in FMSA9
-        
+
         private List<String> availableDBs;
-        
+
         /// <summary>
         /// Read-only List of available files.
         /// </summary>
@@ -421,7 +422,7 @@ namespace fmDotNet
                                 switch (attrib.Name)
                                 {
                                     case "version":
-                                        this.WPEVersion= attrib.Value;
+                                        this.WPEVersion = attrib.Value;
                                         break;
                                     case "name":
                                         this.WPEName = attrib.Value;
@@ -471,7 +472,6 @@ namespace fmDotNet
                         // MessageBox.Show("Unhandled Error.\n" + tryError.Message, "Error...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         break;
                 }
-                Tools.LogUtility.WriteEntry(tryError, System.Diagnostics.EventLogEntryType.Error);
             }
             return temp;
         } // GetFiles
@@ -586,7 +586,7 @@ namespace fmDotNet
                     this.FMPassword,
                     this.ResponseTimeout,
                     this.DTDValidation);
-                
+
                 foreach (XmlNode rootNode in root.ChildNodes)
                 {
                     switch (rootNode.Name.ToLower())
@@ -612,7 +612,7 @@ namespace fmDotNet
                                 {
                                     foreach (XmlNode v in vl.ChildNodes)
                                     {
-                                        if(! returnData.Keys.Contains(v.InnerText))
+                                        if (!returnData.Keys.Contains(v.InnerText))
                                         {
                                             returnData.Add(v.InnerText, v.Attributes.GetNamedItem("DISPLAY").Value);
                                         }
@@ -624,10 +624,8 @@ namespace fmDotNet
                     }
                 } // foreach
             } // try
-            catch (Exception ex)
+            catch (Exception)
             {
-                Tools.LogUtility.WriteEntry(ex,
-                    System.Diagnostics.EventLogEntryType.Error);
                 throw;
             }
 
@@ -678,10 +676,8 @@ namespace fmDotNet
                     }
                 } // foreach
             } // try
-            catch(Exception ex)
+            catch
             {
-                Tools.LogUtility.WriteEntry(ex,
-                    System.Diagnostics.EventLogEntryType.Error);
                 throw;
             }
 
@@ -733,9 +729,8 @@ namespace fmDotNet
                         }
                     }
                 } // try
-                catch (Exception ex)
+                catch
                 {
-                    Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
                     throw new System.Xml.XmlException("Error in retrieving the total record count for layout: " + chosenLayout + ", of file: " + CurrentDatabase);
                 } // catch
                 finally
@@ -824,9 +819,8 @@ namespace fmDotNet
                     }
                 } // foreach rootnode
             } // try
-            catch (Exception ex)
+            catch
             {
-                Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
                 throw new System.Xml.XmlException("Error in retrieving field information for layout: " + chosenLayout + ", of file: " + CurrentDatabase);
             } // catch
 
@@ -971,10 +965,10 @@ namespace fmDotNet
         {
             // add error checking here to make sure all pieces are correct
             // raise error if not
-            var returnValue = String.Format("{0}://{1}:{2}/fmi/xml/{3}.xml", 
-                Protocol, 
-                ServerAddress, 
-                Port, 
+            var returnValue = String.Format("{0}://{1}:{2}/fmi/xml/{3}.xml",
+                Protocol,
+                ServerAddress,
+                Port,
                 XmlGrammer);
 
             return returnValue;
@@ -1194,47 +1188,48 @@ namespace fmDotNet
             rq.ContentLength = bytes.Length;
 
             // setup the stream and write the data
-            var requestStream = rq.GetRequestStream();
-            requestStream.Write(bytes, 0, bytes.Length);
-            requestStream.Close();
-
-            // get the respones stream from our "request"
-            var webResponse = rq.GetResponse();
-
-            using (var xmlResposneReader = new XmlTextReader(theUrl, webResponse.GetResponseStream()))
+            using (var requestStream = rq.GetRequestStream())
             {
-                // if we are going to validate, make 
-                // instance of the XmlUrlResolver
-                if (validateDtd == true)
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+
+                // get the respones stream from our "request"
+                var webResponse = rq.GetResponse();
+
+                using (var xmlResposneReader = new XmlTextReader(theUrl, webResponse.GetResponseStream()))
                 {
-                    var resolver = new XmlUrlResolver();
-                    resolver.Credentials = nc;
-                    xmlResposneReader.XmlResolver = resolver;
-                }
-                else
-                {
-                    // do not do any validation
-                    xmlResposneReader.XmlResolver = null;
-                }
-                
-                try
-                {
-                    // Create the XmlDocument.
-                    XmlDocument response = new XmlDocument();
-                    response.Load(xmlResposneReader);
-                    return response.DocumentElement;
-                }
-                catch (Exception ex)
-                {
-                    // don't show message but raise an error!!
-                    Tools.LogUtility.WriteEntry(ex, System.Diagnostics.EventLogEntryType.Error);
-                    return null;
-                }
-                finally
-                {
-                    xmlResposneReader.Close();
-                }
-            } // using
+                    // if we are going to validate, make 
+                    // instance of the XmlUrlResolver
+                    if (validateDtd == true)
+                    {
+                        var resolver = new XmlUrlResolver();
+                        resolver.Credentials = nc;
+                        xmlResposneReader.XmlResolver = resolver;
+                    }
+                    else
+                    {
+                        // do not do any validation
+                        xmlResposneReader.XmlResolver = null;
+                    }
+
+                    try
+                    {
+                        // Create the XmlDocument.
+                        XmlDocument response = new XmlDocument();
+                        response.Load(xmlResposneReader);
+                        return response.DocumentElement;
+                    }
+                    catch
+                    {
+                        // don't show message but raise an error!!
+                        return null;
+                    }
+                    finally
+                    {
+                        xmlResposneReader.Close();
+                    }
+                } // using
+            }
         } // RootOfDoc
 
         /// <summary>

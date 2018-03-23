@@ -213,3 +213,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+src/fmDotNet.Tests/appsettings.json
+src/fmDotNet.Tests/appsettings.dev.json

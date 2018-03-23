@@ -1,33 +1,18 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
+using Xunit;
 
 namespace fmDotNet.Tests
 {
-    [TestClass]
+    [Collection("CompoundFind")]
     public class NewRecordTests
     {
-        public NewRecordTests() { }
-
-        FMSAxml SetupFMSAxml()
-        {
-            var asr = new System.Configuration.AppSettingsReader();
-
-            var fms = new FMSAxml(
-                theServer: (string)asr.GetValue("TestServerName", typeof(string)),
-                theAccount: (string)asr.GetValue("TestServerUser", typeof(string)),
-                thePort: (int)asr.GetValue("TestServerPort", typeof(int)),
-                thePW: (string)asr.GetValue("TestServerPass", typeof(string))
-                );
-            return fms;
-        }
-
-        [TestMethod]
+        [Fact]
         public void NewRecord_ShouldCreate_NewRecordWithID()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -40,18 +25,17 @@ namespace fmDotNet.Tests
             var response = nrRequest.Execute();
 
             // assert
-            Assert.IsNotNull(response);
+            Assert.NotNull(response);
 
             // clean up
             fms.CreateDeleteRequest(response).Execute();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void NewRecord_WithExistingIDShould_ThrowException()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -62,13 +46,10 @@ namespace fmDotNet.Tests
             nrRequest.AddField("ColorID", "1");
             nrRequest.AddField("TypeID", "1");
             nrRequest.AddField("ID", "1");
-            var response = nrRequest.Execute();
 
-            // assert
-            Assert.IsNotNull(response);
+            string response = "";
 
-            // clean up
-            fms.CreateDeleteRequest(response).Execute();
+            Assert.Throws<InvalidOperationException>(() => response = nrRequest.Execute());
         }
     }
 }

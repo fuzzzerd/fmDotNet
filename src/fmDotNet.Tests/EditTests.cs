@@ -1,33 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
+using Xunit;
 
 namespace fmDotNet.Tests
 {
-    [TestClass]
     public class EditTests
     {
-        public EditTests() { }
-
-        FMSAxml SetupFMSAxml()
-        {
-            var asr = new System.Configuration.AppSettingsReader();
-
-            var fms = new FMSAxml(
-                theServer: (string)asr.GetValue("TestServerName", typeof(string)),
-                theAccount: (string)asr.GetValue("TestServerUser", typeof(string)),
-                thePort: (int)asr.GetValue("TestServerPort", typeof(int)),
-                thePW: (string)asr.GetValue("TestServerPass", typeof(string))
-                );
-            return fms;
-        }
-
-        [TestMethod]
+        [Fact]
         public void EditRecord_Should_UpdateRecord()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -50,9 +34,9 @@ namespace fmDotNet.Tests
             refind.SetRecordID(recID);
             var op = refind.Execute();
 
-            Assert.AreNotEqual("0", response);
-            Assert.AreEqual(newName, op.Tables[0].Rows[0]["Name"].ToString());
-            Assert.AreEqual(newDesc, op.Tables[0].Rows[0]["Description"].ToString());
+            Assert.NotEqual("0", response);
+            Assert.Equal(newName, op.Tables[0].Rows[0]["Name"].ToString());
+            Assert.Equal(newDesc, op.Tables[0].Rows[0]["Description"].ToString());
 
             // clean up
             var e = fms.CreateEditRequest(recID);
@@ -61,12 +45,11 @@ namespace fmDotNet.Tests
             e.Execute();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Fact]
         public void EditRecord_Should_Throw_ForInvalid_RecordID()
         {
             // arrange 
-            var fms = this.SetupFMSAxml();
+            var fms = Setup.SetupFMSAxml();
             fms.SetDatabase("fmDotNet_Tests", false);
             fms.SetLayout("FindRequest.Tests");
 
@@ -77,10 +60,8 @@ namespace fmDotNet.Tests
             var edit = fms.CreateEditRequest(Guid.NewGuid().ToString());
             edit.AddField("Name", newName);
             edit.AddField("Description", newDesc);
-            var response = edit.Execute();
+            Assert.Throws<InvalidOperationException>(() => edit.Execute());
 
-            // assert
-            Assert.AreNotEqual("0", response);
         }
     }
 }

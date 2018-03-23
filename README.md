@@ -1,10 +1,10 @@
 # fmDotNet: a wrapper for the FileMaker XML API
 
-This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/WizardSoftware/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
+This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/fuzzzerd/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
 
 If you are familiar with FileMaker Pro 6 CDML Web Publishing or the FileMaker PHP API, fmDotNet will feel familiar to you. Many of the core principles and techniques are the same. The operations and vocabulary are the same as in FileMaker Pro.
 
-The integration tests provided with this library have been tested against FileMaker Server 12 and 14 with full passing grades.
+The integration tests provided with this library have been tested against the latest FileMaker Server with all tests passing.
 
 ## Getting Started with fmDotNet
 
@@ -52,7 +52,7 @@ This finds all items where the color is Red **OR** Blue.
 
 ### Additional fmDotNet Example Usage
 
-Browse the code in the test project [fmDotNet.Tests](https://github.com/WizardSoftware/fmDotNet/tree/master/src/fmDotNet.Tests) for basic usage of the library. This is the automated test code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing usage of fmDotNet in the context of a real application.
+Browse the code in the test project fmDotNet.Tests for basic usage of the library. This is the automated test code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing usage of fmDotNet in the context of a real application.
 
 ### Key Differences 
 
@@ -61,26 +61,29 @@ There are several differences between this fork of fmDotNet and the original. Th
  1. Uses HTTP POST for all requests to FileMaker Server
  2. Has method, property, and field names in line with [MSDN Naming Guidelines](http://msdn.microsoft.com/en-us/library/vstudio/ms229002.aspx)
  3. Does not include support for ADODB RecordSets
- 4. Is compiled against .NET 3.5 SP1
+ 4. Targets .NET Standard 2.0
 
 ### Contributing to fmDotNet
 
- 1. [Fork us!](https://github.com/WizardSoftware/fmDotNet/fork) Make improvements, add more (or better) tests. Then make a pull request. 
- 2. Submit an issue/bug with steps to reproduce it.
- 3. Create a wiki page with more detailed examples, tutorials, or documentation.
+ 1. Submit an issue/bug with steps to reproduce it.
+ 2. Create a wiki page with more detailed examples, tutorials, or documentation.
  
-Please make sure that that changes you submit to the core fmDotNet project pass the tests in fmDotNet.Tests or explain why they don't and why the test should be updated.
+Please make sure that that changes you submit to the core fmDotNet project pass the tests in fmDotNet.Tests or explain why they don't and why the test should be updated. These are integration tests, so you'll need to run the included FileMaker database on a copy of FileMaker Server.
 
 ### FileMaker Documentation
 
 Documentation for the FileMaker APIs that fmDotNet covers are linked below.
 
- 1. [FileMaker Server 12 Web Publishing with XML](http://www.filemaker.com/support/product/docs/12/fms/fms12_cwp_xml_en.pdf)
- 2. [FileMaker Server 11 Web Publishing with XSLT and XML](http://www.filemaker.com/support/product/docs/fms/fms11_cwp_xslt_en.pdf)
+ - [FileMaker Server 16 Web Publishing Guide](https://fmhelp.filemaker.com/docs/16/en/fms16_cwp_guide.pdf)
+ - [FileMaker Server 15 Web Publishing Guide](https://fmhelp.filemaker.com/docs/15/en/fms15_cwp_guide.pdf)
+ - [FileMaker Server 14 Web Publishing Guide](https://fmhelp.filemaker.com/docs/14/en/fms14_cwp_guide.pdf)
+  - [FileMaker Server 13 Web Publishing with XML](https://fmhelp.filemaker.com/docs/13/en/fms13_cwp_xml.pdf)
+ - [FileMaker Server 12 Web Publishing with XML](http://www.filemaker.com/support/product/docs/12/fms/fms12_cwp_xml_en.pdf)
+ - [FileMaker Server 11 Web Publishing with XSLT and XML](http://www.filemaker.com/support/product/docs/fms/fms11_cwp_xslt_en.pdf)
 
 ### Versioning
 
-We attempt to stick to [Semantic Versioning](http://semver.org/). Using the Major.Minor.Patch syntax, we attempt to follow the basic rules
+We use [Semantic Versioning](http://semver.org/). Using the Major.Minor.Patch syntax, we attempt to follow the basic rules
 
  1. MAJOR version when you make incompatible API changes,
  2. MINOR version when you add functionality in a backwards-compatible manner, and
