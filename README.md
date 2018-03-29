@@ -16,6 +16,10 @@ To install fmDotNet to your project, from within [Visual Studio](http://www.micr
 	
 Nuget Package Site: https://nuget.org/packages/fmDotNet/
 
+| NuGet Downloads | License |
+|---|---|
+| ![NuGet](https://img.shields.io/nuget/dt/fmDotNet.svg) | [![license](https://img.shields.io/github/license/fuzzzerd/fmDotNet.svg?style=flat-square)](https://github.com/fuzzzerd/fmDotNet/blob/master/LICENSE) |
+
 ### Using fmDotNet in Code
 
 You can start querying data from your FileMaker database with just a few lines of code:
@@ -54,6 +58,16 @@ This finds all items where the color is Red **OR** Blue.
 
 Browse the code in the test project fmDotNet.Tests for basic usage of the library. This is the automated test code that is used to ensure that fmDotNet functions correctly. It is a good place to see how specific tasks are completed using fmDotNet. In the future, we would love to have a full sample application showing usage of fmDotNet in the context of a real application.
 
+### Repository Statistics
+
+[![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/fuzzzerd/fmDotNet.svg?style=flat-square)](https://github.com/fuzzzerd/fmDotNet/commits/master)
+
+[![GitHub issues](https://img.shields.io/github/issues/fuzzzerd/fmDotNet.svg?style=flat-square)](https://github.com/fuzzzerd/fmDotNet/issues)
+
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/fuzzzerd/fmDotNet.svg?style=flat-square)](https://github.com/fuzzzerd/fmDotNet/commits/master)
+
+[![GitHub language count](https://img.shields.io/github/languages/count/fuzzzerd/fmDotNet.svg?style=flat-square)](https://github.com/fuzzzerd/fmDotNet/commits/master)
+
 ### Key Differences 
 
 There are several differences between this fork of fmDotNet and the original. This version
@@ -88,7 +102,3 @@ We use [Semantic Versioning](http://semver.org/). Using the Major.Minor.Patch sy
  1. MAJOR version when you make incompatible API changes,
  2. MINOR version when you add functionality in a backwards-compatible manner, and
  3. PATCH version when you make backwards-compatible bug fixes.
-
-### License
-
-[Common Public License Version 1.0](http://opensource.org/licenses/cpl1.0.txt)
