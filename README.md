@@ -1,6 +1,6 @@
-## FileMaker Data Api
+# FileMaker Data Api
 
-Looking for a .NET wrapper for the new FileMaker Data API? Check out https://github.com/fuzzzerd/FMData.
+Looking for a .NET wrapper for the new FileMaker Data API? Check out https://github.com/fuzzzerd/FMData. 
 
 # fmDotNet: a wrapper for the FileMaker XML API
 
