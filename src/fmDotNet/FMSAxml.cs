@@ -301,7 +301,7 @@ namespace fmDotNet
             if (CheckDatabase(theDB) == true)
             {
                 // set the database
-                CurrentDatabase = theDB;
+                CurrentDatabase = Uri.EscapeUriString(theDB);
 
                 // if we were told to skip layout/scripts skip or process
                 if (checkFileAndLayout == true)
