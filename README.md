@@ -1,3 +1,7 @@
+# FileMaker Data Api
+
+This project is not actively maintained. If you are looking for a .NET client for the new FileMaker Data API, check out https://github.com/fuzzzerd/FMData. It has full support for the Data API and partial support for the XML API and works with modern .NET.
+
 # fmDotNet: a wrapper for the FileMaker XML API
 
 This is a fork of [the original fmDotNet](http://fmdotnet.sourceforge.net/). It includes additional coverage of the FileMaker XML API that was not present in the original version. Most notibly support for the `-findquery` operation via the [fmDotNet.Requests.CompoundFind](https://github.com/WizardSoftware/fmDotNet/blob/master/src/fmDotNet/Requests/CompoundFind.cs) class. Our fork also includes a set of unit/integration tests.
